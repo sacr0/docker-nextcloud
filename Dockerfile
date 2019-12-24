@@ -1,11 +1,10 @@
-FROM nextcloud:17.0.1-fpm-alpine
+FROM nextcloud:17.0.2-fpm-alpine
 
 RUN set -ex; \
     \
     apk add --no-cache \
         imagemagick \
         samba-client \
-        libsmbclient \
         tzdata 
 RUN set -ex; \
     \
@@ -13,6 +12,6 @@ RUN set -ex; \
         $PHPIZE_DEPS \
         samba-dev \
     ; \
-    pecl install smbclient \
-    apk del .build-deps \
-    && echo "extension=smbclient.so" > /usr/local/etc/php/conf.d/smbclient.ini 
+    pecl install smbclient; \
+    docker-php-ext-enable smbclient; \
+    apk del .build-deps
